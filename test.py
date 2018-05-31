@@ -1,3 +1,4 @@
+## This class purpose is to run tests to check if the program will work correctly
 
 class Test():
     def __init__(self, filePath):
@@ -7,6 +8,7 @@ class Test():
     def run(self):
         try:
             self.doesFileExist()
+            self.isFileEmpty()
             self.haveInternetAccess()
             self.isWebSiteUp()
         except Exception as error:
@@ -17,7 +19,9 @@ class Test():
         if  not os.path.exists(self.path):
             print("File exist : Error")
             raise Exception('File was not found')
-            
+
+    def isFileEmpty(self):
+        print("isFileEmpty function has to be implemented!")    
     
     def haveInternetAccess(self):
         import socket
@@ -33,7 +37,7 @@ class Test():
     def isWebSiteUp(self):
         import requests
         #Web site where I want to check latest release
-        website_url = "http://www.japscan.cc"
+        website_url = "http://www.japscan.cc/mangas/"
         response = requests.get(website_url, stream=True)
         if response.status_code != 200:
             print("Japscan website access : Error")
