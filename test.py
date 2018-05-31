@@ -14,18 +14,17 @@ class Test():
 
     def doesFileExist(self):
         import os.path
-        if os.path.exists(self.path):
-            print("File exist : OK")
-        else:
+        if  not os.path.exists(self.path):
             print("File exist : Error")
             raise Exception('File was not found')
+            
     
     def haveInternetAccess(self):
         import socket
         str_google = "www.google.com"
         try:
             socket.gethostbyname(str_google)
-            print("Internet access : OK")
+            #print("Internet access : OK")
         except OSError as error:
             print("Internet access : Error")
             print("No internet access...")
@@ -39,8 +38,8 @@ class Test():
         if response.status_code != 200:
             print("Japscan website access : Error")
             raise Exception("Japscan must be down...")
-        else:
-            print("Japscan website access : OK")
+        #else:
+            #print("Japscan website access : OK")
 
 
         
