@@ -32,8 +32,8 @@ if __name__ == "__main__":
     soup = BeautifulSoup(data, 'lxml')
 
     # Search for <div id="liste_mangas">
-
     content = soup.find('div', {'id' : 'liste_mangas'})
+
     # If he doesn't find it -> quit the program
     if type(content) == 'NoneType':
         print("<div id=\"liste_mangas\"> was not found...")
@@ -49,10 +49,27 @@ if __name__ == "__main__":
         manga_search = "/mangas/" + manga_search + "/"
         # print("Link :", manga_search)
         found = content.find('a', {'href' : manga_search} )
-        # Check wether or not it found the manga we're looking for
+        # Check whether or not it found the manga we're looking for
         if ( found != None):
             # print("Found!")
-            print("href : ", found['href'])
+            # print("href : ", found['href'])
+            manga_search_url = "http://www.japscan.cc" + manga_search
+            manga_response = requests.get(manga_search_url)
+            if manga_response.status_code == 200:
+                # print("Manga url responded!")
+                mangaPage_data = manga_response.text
+                mangaPage_soup = BeautifulSoup(mangaPage_data, 'lxml')
+
+                # Search for <div id="liste_chapitres">
+                mangaPage_content = mangaPage_soup.find('div', {'id' : 'liste_chapitres'})
+                # If he found it
+                if type(mangaPage_content) != 'NoneType':
+                    # print("<div id=\"liste_chapitres\"> found")
+                    last_chapter_url = mangaPage_content.find('a')
+                    # print("href : " + str(last_chapter_url) )
+                    print("href : " + last_chapter_url['href'])
+            else:
+                print("Manga url didn't respond")
         else:
             print(manga + " not found")
 
