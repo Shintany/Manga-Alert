@@ -12,9 +12,16 @@ if __name__ == "__main__":
     list_path = "list.csv"
 
     response = requests.get(website_url)
-    #Get the data from the url in text format
+    # Get the data from the url in text format
     data = response.text
     soup = BeautifulSoup(data, 'lxml')
 
+    # Search for <div id="liste_mangas">
+
+    content = soup.find('div', {'id' : 'liste_mangas'})
+    if type(content) == 'NoneType':
+        print("Not found")
+    else:
+        print("Successfully Found")
 
     
