@@ -13,3 +13,6 @@ class Database():
             dbReader = csv.reader(infile)
             self.database = {row[0]:row[1] for row in dbReader}
     
+    def displayDatabase(self):
+        for keys in self.database:
+            print(keys, ' : ', self.database.get(keys))

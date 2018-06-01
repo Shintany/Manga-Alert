@@ -16,12 +16,11 @@ if __name__ == "__main__":
         print("Usage : python3 Manga-Alert.py $databasePath")
         exit()
     databasePath = sys.argv[1]
-    print(databasePath)
 
     # Filling the dictionnary with the manga in the .csv file
     db = Database(databasePath)
-    print(db.database.get("One piece"))
-    print(db.database.get("My Hero Academia"))
+    db.displayDatabase()
+    print("Database length : ", len(db.database) )
 
     website_url = "http://www.japscan.cc/mangas/"
     list_path = "list.csv"
@@ -38,7 +37,8 @@ if __name__ == "__main__":
     if type(content) == 'NoneType':
         print("<div id=\"liste_mangas\"> was not found...")
         exit()
-    else:
-        print("Successfully Found")
-        # for link in content.find_all('a', 'href' ):
+    # If he does fint it
+    print("Successfully Found")
+    # for manga in db
+    # for link in content.find_all('a', 'href' ):
 
