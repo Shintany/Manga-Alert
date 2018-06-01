@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import string
 import requests
 from test import Test
 from tools import Database
@@ -19,8 +20,8 @@ if __name__ == "__main__":
 
     # Filling the dictionnary with the manga in the .csv file
     db = Database(databasePath)
-    db.displayDatabase()
-    print("Database length : ", len(db.database) )
+    # db.displayDatabase()
+    # print("Database length : ", len(db.database) )
 
     website_url = "http://www.japscan.cc/mangas/"
     list_path = "list.csv"
@@ -38,7 +39,14 @@ if __name__ == "__main__":
         print("<div id=\"liste_mangas\"> was not found...")
         exit()
     # If he does fint it
-    print("Successfully Found")
-    # for manga in db
+    # print("Successfully Found")
+    print("I'll check the following manga : ")
+    for manga in db.database:
+        print("\t- ", manga)
+        # Replace the spaces by an '-'
+        manga_replaced = manga.replace(' ', '-')
+        manga_replaced = manga_replaced.lower()
+        str_manga = "/mangas/" + manga_replaced + "/"
+        print(str_manga)
     # for link in content.find_all('a', 'href' ):
 
