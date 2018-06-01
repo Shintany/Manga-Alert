@@ -1,4 +1,4 @@
-import bs4
+from bs4 import BeautifulSoup
 import requests
 from test import Test
 
@@ -14,6 +14,7 @@ if __name__ == "__main__":
     response = requests.get(website_url)
     #Get the data from the url in text format
     data = response.text
+    soup = BeautifulSoup(data, 'lxml')
 
 
     
