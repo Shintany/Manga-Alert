@@ -42,11 +42,19 @@ if __name__ == "__main__":
     # print("Successfully Found")
     print("I'll check the following manga : ")
     for manga in db.database:
-        print("\t- ", manga)
+        # print("\t- ", manga)
         # Replace the spaces by an '-'
-        manga_replaced = manga.replace(' ', '-')
-        manga_replaced = manga_replaced.lower()
-        str_manga = "/mangas/" + manga_replaced + "/"
-        print(str_manga)
+        manga_search = manga.replace(' ', '-')
+        manga_search = manga_search.lower()
+        manga_search = "/mangas/" + manga_search + "/"
+        # print("Link :", manga_search)
+        found = content.find('a', {'href' : manga_search} )
+        # Check wether or not it found the manga we're looking for
+        if ( found != None):
+            # print("Found!")
+            print("href : ", found['href'])
+        else:
+            print(manga + " not found")
+
     # for link in content.find_all('a', 'href' ):
 
