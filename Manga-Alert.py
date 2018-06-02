@@ -10,8 +10,6 @@ test = Test(filename)
 test.run()
 
 if __name__ == "__main__":
-    print("Tests : OK")
-
     if len(sys.argv) != 2:
         print ("Argument missing...")
         print("Usage : python3 Manga-Alert.py $databasePath")
@@ -46,6 +44,7 @@ if __name__ == "__main__":
         # Replace the spaces by an '-'
         manga_search = manga.replace(' ', '-')
         manga_search = manga_search.lower()
+        # Saving the manga name avec '-' instead of spaces
         manga_lower = manga_search
         manga_search = "/mangas/" + manga_search + "/"
         # print("Link :", manga_search)
@@ -72,8 +71,16 @@ if __name__ == "__main__":
                     str_to_remove = "//www.japscan.cc/lecture-en-ligne/" + manga_lower + "/"
                     # print("str_to_remove : " + str_to_remove)
                     last_chapter = last_chapter_url['href'].replace(str_to_remove, '')
-                    last_chapter = last_chapter.replace('/','')
-                    print("last chapter : " + last_chapter)
+                    last_chapter = int(last_chapter.replace('/',''))
+                    # print(manga + " last chapter : " + str(last_chapter) )
+                    # Get the manga's last chapter in the database and then compare them
+                    db_manga_last_chapter = int(db.database[manga])
+                    # print("In the db : " + str(db_manga_last_chapter))
+                    if last_chapter > db_manga_last_chapter:
+                        print(manga + " : " + str(last_chapter - db_manga_last_chapter) + " to read!")
+
+                else:
+                    print("manga_content didn't find : <div id=\"liste_chapitres\">")
             else:
                 print("Manga url didn't respond")
         else:

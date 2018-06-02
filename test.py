@@ -11,8 +11,10 @@ class Test():
             self.isFileEmpty()
             self.haveInternetAccess()
             self.isWebSiteUp()
+            print("Tests : OK")
         except Exception as error:
             print(repr(error))
+            exit()
 
     def doesFileExist(self):
         import os.path
