@@ -40,12 +40,13 @@ if __name__ == "__main__":
         exit()
     # If he does fint it
     # print("Successfully Found")
-    print("I'll check the following manga : ")
+    # print("I'll check the following manga : ")
     for manga in db.database:
         # print("\t- ", manga)
         # Replace the spaces by an '-'
         manga_search = manga.replace(' ', '-')
         manga_search = manga_search.lower()
+        manga_lower = manga_search
         manga_search = "/mangas/" + manga_search + "/"
         # print("Link :", manga_search)
         found = content.find('a', {'href' : manga_search} )
@@ -66,12 +67,16 @@ if __name__ == "__main__":
                 if type(mangaPage_content) != 'NoneType':
                     # print("<div id=\"liste_chapitres\"> found")
                     last_chapter_url = mangaPage_content.find('a')
-                    # print("href : " + str(last_chapter_url) )
-                    print("href : " + last_chapter_url['href'])
+                    # print("href : " + last_chapter_url['href'])
+                    # Setting the string to remove in order to get the chapter number
+                    str_to_remove = "//www.japscan.cc/lecture-en-ligne/" + manga_lower + "/"
+                    # print("str_to_remove : " + str_to_remove)
+                    last_chapter = last_chapter_url['href'].replace(str_to_remove, '')
+                    last_chapter = last_chapter.replace('/','')
+                    print("last chapter : " + last_chapter)
             else:
                 print("Manga url didn't respond")
         else:
             print(manga + " not found")
 
-    # for link in content.find_all('a', 'href' ):
 
