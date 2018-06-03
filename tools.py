@@ -6,13 +6,14 @@ class Database():
     def __init__(self, filePath):
         self.database = {}
         self.databasePath = filePath
-
+        self.header = "manga_name"
         self.fillDatabase()
     
     def fillDatabase(self):
         with open(self.databasePath, mode = 'r') as infile:
             dbReader = csv.reader(infile)
             self.database = {row[0]:row[1] for row in dbReader}
+        del self.database[self.header]
     
     def displayDatabase(self):
         for keys in self.database:

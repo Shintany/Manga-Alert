@@ -19,9 +19,8 @@ if __name__ == "__main__":
 
     # Filling the dictionnary with the manga in the .csv file
     db = Database(databasePath)
-    # db.displayDatabase()
-    # print("Database length : ", len(db.database) )
-
+    db.displayDatabase()
+    exit()
     website_url = "http://www.japscan.cc/mangas/"
     list_path = "list.csv"
 
@@ -37,50 +36,43 @@ if __name__ == "__main__":
     if type(content) == 'NoneType':
         print("<div id=\"liste_mangas\"> was not found...")
         exit()
-    # If he does fint it
-    # print("Successfully Found")
-    # print("I'll check the following manga : ")
 
+    # If he does fint it
     # Preparing the Email object
     mail = Email()
 
     for manga in db.database:
-        # print("\t- ", manga)
         # Replace the spaces by an '-'
         manga_search = manga.replace(' ', '-')
         manga_search = manga_search.lower()
+
         # Saving the manga name avec '-' instead of spaces
         manga_lower = manga_search
         manga_search = "/mangas/" + manga_search + "/"
-        # print("Link :", manga_search)
         found = content.find('a', {'href' : manga_search} )
+
         # Check whether or not it found the manga we're looking for
         if ( found != None):
-            # print("Found!")
-            # print("href : ", found['href'])
             manga_search_url = "http://www.japscan.cc" + manga_search
             manga_response = requests.get(manga_search_url)
             if manga_response.status_code == 200:
-                # print("Manga url responded!")
                 mangaPage_data = manga_response.text
                 mangaPage_soup = BeautifulSoup(mangaPage_data, 'lxml')
 
                 # Search for <div id="liste_chapitres">
                 mangaPage_content = mangaPage_soup.find('div', {'id' : 'liste_chapitres'})
+
                 # If he found it
                 if type(mangaPage_content) != 'NoneType':
-                    # print("<div id=\"liste_chapitres\"> found")
                     last_chapter_url = mangaPage_content.find('a')
-                    # print("href : " + last_chapter_url['href'])
+
                     # Setting the string to remove in order to get the chapter number
                     str_to_remove = "//www.japscan.cc/lecture-en-ligne/" + manga_lower + "/"
-                    # print("str_to_remove : " + str_to_remove)
                     last_chapter = last_chapter_url['href'].replace(str_to_remove, '')
                     last_chapter = int(last_chapter.replace('/',''))
-                    # print(manga + " last chapter : " + str(last_chapter) )
+
                     # Get the manga's last chapter in the database and then compare them
                     db_manga_last_chapter = int(db.database[manga])
-                    # print("In the db : " + str(db_manga_last_chapter))
                     if last_chapter > db_manga_last_chapter:
                         content_for_mail = " - " + manga + " : " + str(last_chapter - db_manga_last_chapter) + " chapters to read!\n\n"
                         mail.addContent(content_for_mail)
