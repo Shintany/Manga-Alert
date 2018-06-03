@@ -19,8 +19,6 @@ if __name__ == "__main__":
 
     # Filling the dictionnary with the manga in the .csv file
     db = Database(databasePath)
-    db.displayDatabase()
-    exit()
     website_url = "http://www.japscan.cc/mangas/"
     list_path = "list.csv"
 
@@ -76,6 +74,7 @@ if __name__ == "__main__":
                     if last_chapter > db_manga_last_chapter:
                         content_for_mail = " - " + manga + " : " + str(last_chapter - db_manga_last_chapter) + " chapters to read!\n\n"
                         mail.addContent(content_for_mail)
+                        db.database[manga] = last_chapter
                 else:
                     print("manga_content didn't find : <div id=\"liste_chapitres\">")
             else:
@@ -84,6 +83,7 @@ if __name__ == "__main__":
             print(manga + " not found")
     
     # mail.displayMailContent()
-    mail.sendMail()
+    # mail.sendMail()
+    db.displayDatabase()
 
 
