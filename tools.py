@@ -41,6 +41,7 @@ class Email():
 
     def addContent(self, text_to_add):
         self.content = self.content + text_to_add
+        
 
     def displayMailContent(self):
         print(self.content)
