@@ -3,6 +3,7 @@ import string
 import requests
 from test import Test
 from tools import Database
+from tools import Email
 import sys
 
 filename = "list.csv"
@@ -39,6 +40,10 @@ if __name__ == "__main__":
     # If he does fint it
     # print("Successfully Found")
     # print("I'll check the following manga : ")
+
+    # Preparing the Email object
+    mail = Email()
+
     for manga in db.database:
         # print("\t- ", manga)
         # Replace the spaces by an '-'
@@ -77,13 +82,16 @@ if __name__ == "__main__":
                     db_manga_last_chapter = int(db.database[manga])
                     # print("In the db : " + str(db_manga_last_chapter))
                     if last_chapter > db_manga_last_chapter:
-                        print(manga + " : " + str(last_chapter - db_manga_last_chapter) + " to read!")
-
+                        content_for_mail = " - " + manga + " : " + str(last_chapter - db_manga_last_chapter) + " chapters to read!\n\n"
+                        mail.addContent(content_for_mail)
                 else:
                     print("manga_content didn't find : <div id=\"liste_chapitres\">")
             else:
                 print("Manga url didn't respond")
         else:
             print(manga + " not found")
+    
+    # mail.displayMailContent()
+    mail.sendMail()
 
 
