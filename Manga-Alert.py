@@ -82,9 +82,8 @@ if __name__ == "__main__":
         else:
             print(manga + " not found")
     
-    # mail.displayMailContent()
-    # mail.sendMail()
-    # db.displayDatabase()
+    # Sending mail to the user
+    mail.sendMail()
     db.updateDatabase()
 
 
