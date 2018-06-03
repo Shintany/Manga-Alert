@@ -84,6 +84,8 @@ if __name__ == "__main__":
     
     # mail.displayMailContent()
     # mail.sendMail()
-    db.displayDatabase()
+    # db.displayDatabase()
+    db.updateDatabase()
+
 
 

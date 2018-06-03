@@ -1,5 +1,6 @@
 import smtplib
 import csv
+import shutil
 from tempfile import NamedTemporaryFile
 
 # This class purpose is to put into an array the list of manga from the .csv file
@@ -20,12 +21,22 @@ class Database():
         for keys in self.database:
             print(keys, ' : ', self.database.get(keys))
 
-    def updateDatabse(self):
+    def updateDatabase(self):
+        self.database[self.header[0]] = self.header[1]
+        filename = self.databasePath
         tempfile = NamedTemporaryFile(mode='w', delete=False)
 
-        with open(self.databasePath, 'r', encoding='utf8') as csvfile, tempfile:
+        with open(filename, 'r', encoding='utf8') as csvfile, tempfile:
             reader = csv.DictReader(csvfile, fieldnames=self.header)
             writer = csv.DictWriter(tempfile, fieldnames=self.header)
+            # writer.writeheader()
+
+            for row in reader:
+                print(row[self.header[0]] + " : " + row[self.header[1]])
+                row[self.header[1]] = self.database.get(row[self.header[0]])
+                row = {'manga_name' : row['manga_name'], 'chapter_nb' : row['chapter_nb']}
+                writer.writerow(row)
+            shutil.move(tempfile.name, filename)
 
 class Email():
     def __init__(self):
@@ -41,7 +52,6 @@ class Email():
 
     def addContent(self, text_to_add):
         self.content = self.content + text_to_add
-        
 
     def displayMailContent(self):
         print(self.content)
