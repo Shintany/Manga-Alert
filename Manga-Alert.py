@@ -22,6 +22,8 @@ if __name__ == "__main__":
     website_url = "http://www.japscan.cc/mangas/"
     list_path = "list.csv"
 
+    new_manga = False
+
     response = requests.get(website_url)
     # Get the data from the url in text format
     data = response.text
@@ -72,9 +74,18 @@ if __name__ == "__main__":
                     # Get the manga's last chapter in the database and then compare them
                     db_manga_last_chapter = int(db.database[manga])
                     if last_chapter > db_manga_last_chapter:
+                        new_manga = True
                         content_for_mail = " - " + manga + " : " + str(last_chapter - db_manga_last_chapter) + " chapters to read!\n\n"
                         mail.addContent(content_for_mail)
                         db.database[manga] = last_chapter
+                    # If the user entered a chapter number greater than the latest release chapter
+                    elif last_chapter < db_manga_last_chapter:
+                        content_for_mail = " - " + manga + " : The chapter number you entered in the database is greater than the latest released chapter...\n\n"
+                        mail.addContent(content_for_mail)
+                        db.database[manga] = last_chapter
+                    else:
+                        content_for_mail = " - " + manga + " : You're already up to date\n\n"
+                        mail.addContent(content_for_mail)
                 else:
                     print("manga_content didn't find : <div id=\"liste_chapitres\">")
             else:
@@ -83,8 +94,9 @@ if __name__ == "__main__":
             print(manga + " not found")
     
     # Sending mail to the user
-    mail.sendMail()
-    db.updateDatabase()
+    if new_manga == True:
+        mail.sendMail()
+        db.updateDatabase()
 
 
 

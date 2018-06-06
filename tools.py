@@ -37,6 +37,7 @@ class Database():
                 row = {'manga_name' : row['manga_name'], 'chapter_nb' : row['chapter_nb']}
                 writer.writerow(row)
             shutil.move(tempfile.name, filename)
+        print("Database updated successfully!")
 
 class Email():
     def __init__(self):
