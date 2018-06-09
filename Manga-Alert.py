@@ -120,7 +120,7 @@ if __name__ == "__main__":
     if new_manga == True:
         # mail.displayMailContent()
         mail.sendMail()
-        # db.updateDatabase()
+        db.updateDatabase()
 
 
 

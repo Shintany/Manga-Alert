@@ -53,9 +53,9 @@ class Database():
 class Email():
     def __init__(self):
         # enter your gmail bot address and pwd here
-        self.sender = " YOUR EMAIL ADDRESS "
-        self.gmail_password = " PASSWORD "
-        self.recipients = [" TO "]
+        self.sender = "manga.alert.bot@gmail.com"
+        self.gmail_password = "YourPassword"
+        self.recipients = ["irchadtuankitchil@gmail.com"]
 
         # Create the enclosing (outer) message
         self.outer = MIMEMultipart()
