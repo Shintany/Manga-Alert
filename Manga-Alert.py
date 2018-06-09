@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import re
 import string
 import requests
 from test import Test
@@ -75,8 +76,30 @@ if __name__ == "__main__":
                     db_manga_last_chapter = int(db.database[manga])
                     if last_chapter > db_manga_last_chapter:
                         new_manga = True
-                        content_for_mail = " - " + manga + " : " + str(last_chapter - db_manga_last_chapter) + " chapters to read!\n\n"
+                        content_for_mail = manga + " : " + str(last_chapter - db_manga_last_chapter) + " chapters to read!\n"
                         mail.addContent(content_for_mail)
+
+                        # List all the chapters' name
+                        all_chapters = mangaPage_content.find_all('a', {'href' : re.compile(r".*")})
+                        chapter_nb = last_chapter
+
+                        # Looping over every manga's chapters
+                        for chapter in all_chapters:
+                            if chapter_nb > db_manga_last_chapter:
+                                
+                                ######################################
+                                # MAYBE HAVE TO PASS BY A TXT FILE...
+                                # Saving manga's title
+                                chapter_title_str = ""
+                                chapter_title_str += chapter.get_text()
+                                content_for_mail = ""
+                                if (str(chapter_nb) in chapter_title_str):
+                                    content_for_mail += "-> " + chapter_title_str + "\n"
+                                    mail.addContent(content_for_mail) 
+                                    chapter_nb = chapter_nb - 1
+                            else:
+                                mail.addContent('\n\t\t------------------\n\n')
+                                break
                         db.database[manga] = last_chapter
                     # If the user entered a chapter number greater than the latest release chapter
                     elif last_chapter < db_manga_last_chapter:
@@ -95,8 +118,9 @@ if __name__ == "__main__":
     
     # Sending mail to the user
     if new_manga == True:
+        # mail.displayMailContent()
         mail.sendMail()
-        db.updateDatabase()
+        # db.updateDatabase()
 
 
 
