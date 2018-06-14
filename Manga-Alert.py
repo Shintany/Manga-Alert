@@ -6,6 +6,7 @@ from test import Test
 from tools import Database
 from tools import Email
 import sys
+import os
 
 filename = "list.csv"
 test = Test(filename)
@@ -75,7 +76,6 @@ if __name__ == "__main__":
                     # Get the manga's last chapter in the database and then compare them
                     db_manga_last_chapter = int(db.database[manga])
                     if last_chapter > db_manga_last_chapter:
-                        new_manga = True
                         content_for_mail = manga + " : " + str(last_chapter - db_manga_last_chapter) + " chapters to read!\n"
                         mail.addContent(content_for_mail)
 
@@ -93,9 +93,15 @@ if __name__ == "__main__":
                                 chapter_title_str = ""
                                 chapter_title_str += chapter.get_text()
                                 content_for_mail = ""
-                                if (str(chapter_nb) in chapter_title_str):
-                                    content_for_mail += "-> " + chapter_title_str + "\n"
-                                    mail.addContent(content_for_mail) 
+                                if not ("Spoiler" in chapter_title_str):
+
+                                    new_manga = True
+                                    if (str(chapter_nb) in chapter_title_str):
+                                        content_for_mail += "-> " + chapter_title_str + "\n"
+                                        mail.addContent(content_for_mail) 
+                                        chapter_nb = chapter_nb - 1
+                                else:
+                                    print(str(chapter_nb) + " is a spoiler...")
                                     chapter_nb = chapter_nb - 1
                             else:
                                 mail.addContent('\n\t\t------------------\n\n')
@@ -107,7 +113,7 @@ if __name__ == "__main__":
                         mail.addContent(content_for_mail)
                         db.database[manga] = last_chapter
                     else:
-                        content_for_mail = " - " + manga + " : You're already up to date\n\n"
+                        content_for_mail = manga + " : You're already up to date\n\n"
                         mail.addContent(content_for_mail)
                 else:
                     print("manga_content didn't find : <div id=\"liste_chapitres\">")
@@ -120,7 +126,10 @@ if __name__ == "__main__":
     if new_manga == True:
         # mail.displayMailContent()
         mail.sendMail()
-        db.updateDatabase()
+        # db.updateDatabase()
+    else:
+        print("No release...")
+        os.remove(mail.attachment)
 
 
 
