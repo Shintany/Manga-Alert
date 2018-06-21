@@ -5,6 +5,7 @@ import requests
 from test import Test
 from tools import Database
 from tools import Email
+from PageCombiner import PageCombiner
 import sys
 import os
 
@@ -99,6 +100,7 @@ if __name__ == "__main__":
                                     if (str(chapter_nb) in chapter_title_str):
                                         content_for_mail += "-> " + chapter_title_str + "\n"
                                         mail.addContent(content_for_mail) 
+                                        p = PageCombiner(manga, chapter_nb, "https:" + chapter['href'])
                                         chapter_nb = chapter_nb - 1
                                 else:
                                     print(str(chapter_nb) + " is a spoiler...")
@@ -125,8 +127,9 @@ if __name__ == "__main__":
     # Sending mail to the user
     if new_manga == True:
         # mail.displayMailContent()
-        mail.sendMail()
+        # mail.sendMail()
         # db.updateDatabase()
+        print("New release!")
     else:
         print("No release...")
         os.remove(mail.attachment)
