@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from urllib.request import Request
+import string
 
 class PageCombiner():
     def __init__(self, _name, _chapter, _url):
@@ -40,22 +41,53 @@ class PageCombiner():
         
         if( self.response.status_code == 200 ):
 
-            soup = BeautifulSoup(self.data, 'lxml')
+            # Find id attribute of <img> tag with "image" as value
+            img_soup = self.soup.find('img', {'id' : 'image'})
+
+            # Adding headers otherwise, we're getting kicked out of the website
+            user_agent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 5_0 like Mac OS X) AppleWebKit/534.46'
+
+            # Count the number of zero in src
+            # It will allow us to know the format url
+            zeroCount = img_soup['data-img'].count('0')
+    
+            # Reformat manga name
+            formatted_name = ""
+            word_list = self.name.split(" ")
+            for word in word_list:
+                if not word[0].isupper():
+
+                    # Convert lower to upper
+                    upper_letter = word[0].upper()
+                    if len(word) > 1:
+                        word = upper_letter + word[1:]
+                    else:
+                        word = upper_letter
+                formatted_name = formatted_name + "-" + word
+            
+            # Deleting the first "-"
+            formatted_name = formatted_name[1:]
+
+            # src format : https://cdn.japscan.cc/lel/Manga-Name/chapter/img_soup['src]
+            image_url_base = "https://cdn.japscan.cc/lel/" + formatted_name + "/" + str(self.chapter) + "/"
 
             # Initialize counter
-            i = 1
-            while i <= self.pageCount:
+            for i in range(1, self.pageCount + 1, 1):
 
-                # Find id attribute of <img> tag with "image" as value
-                img_soup = soup.find('img', {'id' : 'image'})
+                img_name = ""
+                # Adding as much zero as the first url had
+                for j in range(0, zeroCount):
+                    img_name = img_name + "0"
+                img_name = img_name + str(i) + ".jpg"
+                image_url = image_url_base + img_name
+
+                print(image_url)
                 print(img_soup['src'])
 
                 # Download image
-                user_agent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 5_0 like Mac OS X) AppleWebKit/534.46'
-                img = open(img_soup['data-img'], 'wb')
-                img.write( urlopen( Request(img_soup['src'], headers={'User-Agent': user_agent})).read() )
+                img = open(img_name, 'wb')
+                img.write( urlopen( Request(image_url, headers={'User-Agent': user_agent})).read() )
                 img.close()
-                i = i + 1
 
         else:
             print("The url send an error code : " + str(self.response.status_code))
