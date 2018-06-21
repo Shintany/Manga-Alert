@@ -1,9 +1,11 @@
 from PIL import Image
+import numpy as np
 import requests
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from urllib.request import Request
 import string
+import sys
 
 class PageCombiner():
     def __init__(self, _name, _chapter, _url):
@@ -38,18 +40,13 @@ class PageCombiner():
     
     # This function purpose is to combine all the chapter's page into a single one
     def run(self):
+
+        print("Downloading : " + self.name)
         
         if( self.response.status_code == 200 ):
 
-            # Find id attribute of <img> tag with "image" as value
-            img_soup = self.soup.find('img', {'id' : 'image'})
-
             # Adding headers otherwise, we're getting kicked out of the website
             user_agent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 5_0 like Mac OS X) AppleWebKit/534.46'
-
-            # Count the number of zero in src
-            # It will allow us to know the format url
-            zeroCount = img_soup['data-img'].count('0')
     
             # Reformat manga name
             formatted_name = ""
@@ -71,23 +68,53 @@ class PageCombiner():
             # src format : https://cdn.japscan.cc/lel/Manga-Name/chapter/img_soup['src]
             image_url_base = "https://cdn.japscan.cc/lel/" + formatted_name + "/" + str(self.chapter) + "/"
 
+            # Find id attribute of <img> tag with "image" as value
+            img_soup = self.soup.find('img', {'id' : 'image'})
+
             # Initialize counter
             for i in range(1, self.pageCount + 1, 1):
 
-                img_name = ""
-                # Adding as much zero as the first url had
-                for j in range(0, zeroCount):
-                    img_name = img_name + "0"
-                img_name = img_name + str(i) + ".jpg"
-                image_url = image_url_base + img_name
+                if i != 1:
+                    # Update the page url
+                    next_page_url = self.soup.find('a', {'id' : 'img_link'})
+                    current_page_url = "https://www.japscan.cc" + next_page_url['href']
+                    response = requests.get(current_page_url, stream=True)
+                    data = response.text
+                    self.soup = BeautifulSoup(data, 'lxml')
+                    img_soup = self.soup.find('img', {'id' : 'image'})
 
-                print(image_url)
-                print(img_soup['src'])
+                try:
+                    new_page_url = image_url_base + img_soup['data-img']
 
-                # Download image
-                img = open(img_name, 'wb')
-                img.write( urlopen( Request(image_url, headers={'User-Agent': user_agent})).read() )
-                img.close()
+                    # Download image
+                    img_name = ""
+                    img_name = img_name + str(i) + ".jpg"
+                    img = open(img_name, 'wb')
+                    img.write( urlopen( Request(new_page_url, headers={'User-Agent': user_agent})).read() )
+                    img.close()
+                # Ignore pub page
+                except TypeError as msg:
+                    print(" ")
 
         else:
             print("The url send an error code : " + str(self.response.status_code))
+        
+        # Horizontally combine
+        self.combine()
+
+    def combine(self):
+        
+        list_im = ['1.jpg', '2.jpg', '3.jpg']
+        imgs    = [ Image.open(i) for i in list_im ]
+        # pick the image which is the smallest, and resize the others to match it (can be arbitrary image shape here)
+        min_shape = sorted( [(np.sum(i.size), i.size ) for i in imgs])[0][1]
+        imgs_comb = np.hstack( (np.asarray( i.resize(min_shape) ) for i in imgs ) )
+
+        # save that beautiful picture
+        imgs_comb = Image.fromarray( imgs_comb)
+        imgs_comb.save( 'Trifecta.jpg' )    
+
+        # for a vertical stacking it is simple: use vstack
+        imgs_comb = np.vstack( (np.asarray( i.resize(min_shape) ) for i in imgs ) )
+        imgs_comb = Image.fromarray( imgs_comb)
+        imgs_comb.save( 'Trifecta_vertical.jpg' )
