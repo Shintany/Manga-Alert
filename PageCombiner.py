@@ -6,6 +6,7 @@ from urllib.request import urlopen
 from urllib.request import Request
 import string
 import sys
+import os
 
 class PageCombiner():
     def __init__(self, _name, _chapter, _url):
@@ -104,17 +105,32 @@ class PageCombiner():
 
     def combine(self):
         
-        list_im = ['1.jpg', '2.jpg', '3.jpg']
-        imgs    = [ Image.open(i) for i in list_im ]
-        # pick the image which is the smallest, and resize the others to match it (can be arbitrary image shape here)
-        min_shape = sorted( [(np.sum(i.size), i.size ) for i in imgs])[0][1]
-        imgs_comb = np.hstack( (np.asarray( i.resize(min_shape) ) for i in imgs ) )
+        # list_im = ['1.jpg', '2.jpg', '3.jpg']
+        # imgs    = [ Image.open(i) for i in list_im ]
+        # # pick the image which is the smallest, and resize the others to match it (can be arbitrary image shape here)
+        # min_shape = sorted( [(np.sum(i.size), i.size ) for i in imgs])[0][1]
+        # imgs_comb = np.hstack( (np.asarray( i.resize(min_shape) ) for i in imgs ) )
 
-        # save that beautiful picture
-        imgs_comb = Image.fromarray( imgs_comb)
-        imgs_comb.save( 'Trifecta.jpg' )    
+        # # save that beautiful picture
+        # imgs_comb = Image.fromarray( imgs_comb)
+        # imgs_comb.save( 'Trifecta.jpg' )    
 
-        # for a vertical stacking it is simple: use vstack
-        imgs_comb = np.vstack( (np.asarray( i.resize(min_shape) ) for i in imgs ) )
-        imgs_comb = Image.fromarray( imgs_comb)
-        imgs_comb.save( 'Trifecta_vertical.jpg' )
+        # # for a vertical stacking it is simple: use vstack
+        # imgs_comb = np.vstack( (np.asarray( i.resize(min_shape) ) for i in imgs ) )
+        # imgs_comb = Image.fromarray( imgs_comb)
+        # imgs_comb.save( 'Trifecta_vertical.jpg' )
+
+        img = Image.open('1.jpg', 'r')
+        img_w, img_h = img.size
+        background = Image.new('RGB', (img_w, img_h * (self.pageCount - 1)), (255, 255, 255))
+        background.paste(img, (0,0))
+
+        for i in range(2, self.pageCount):
+
+            img = Image.open(str(i) + '.jpg')
+            offset = (0, (i-1)* img_h)
+            background.paste(img, offset)
+
+
+
+        background.save('out.jpg')
