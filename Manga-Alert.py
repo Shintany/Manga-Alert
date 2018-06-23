@@ -102,6 +102,7 @@ if __name__ == "__main__":
                                             content_for_mail += "-> " + chapter_title_str + "\n"
                                             mail.addContent(content_for_mail) 
                                             p = PageCombiner(manga, chapter_nb, "https:" + chapter['href'])
+                                            mail.addAttachments(p.out_filename)
                                             chapter_nb = chapter_nb - 1
                                     else:
                                         print(str(chapter_nb) + " is a spoiler...")
@@ -131,9 +132,9 @@ if __name__ == "__main__":
         mail.sendMail()
         db.updateDatabase()
         print("New release!")
+        mail.deleteAttachments()
     else:
         print("No release...")
-        os.remove(mail.attachment)
 
 
 

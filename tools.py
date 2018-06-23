@@ -55,7 +55,7 @@ class Email():
         # enter your gmail bot address and pwd here
         self.sender = "manga.alert.bot@gmail.com"
         self.gmail_password = "YourPassword"
-        self.recipients = ["irchadtuankitchil@gmail.com"]
+        self.recipients = ["irchadtuankitchil@gmail.com", "theoyoung@hotmail.fr"]
 
         # Create the enclosing (outer) message
         self.outer = MIMEMultipart()
@@ -66,37 +66,38 @@ class Email():
 
         self.content = ""
 
-        self.attachment = 'Manga-Release.txt'
-
-        self.writeHeader()
-
-    def writeHeader(self):
-        file = open("Manga-Release.txt", "w+")
-        file.write("\t----- Manga Alert Bot Report -----\n\n")
-        file.close()
+        self.attachment = []
 
     def addContent(self, text_to_add):
         self.content = self.content + text_to_add
 
+    def addAttachments(self, filename):
+        self.attachment.append(filename)
+
+    def displayAttachments(self):
+        print(self.attachment)
+
     def displayMailContent(self):
         print(self.content)
+
+    def deleteAttachments(self):
+        for file in self.attachment:
+            os.remove(file)
 
     def sendMail(self):
 
         #writing the content is the .txt file
-        with open(self.attachment, 'a') as out:
-            out.write(self.content)
-
-        try:
-            with open(self.attachment, 'rb') as fp:
-                msg = MIMEBase('application', "octet-stream")
-                msg.set_payload(fp.read())
-            encoders.encode_base64(msg)
-            msg.add_header('Content-Disposition', 'attachment', filename=os.path.basename(self.attachment))
-            self.outer.attach(msg)
-        except:
-            print("Unable to open one of the attachments. Error: ", sys.exc_info()[0])
-            raise             
+        for file in self.attachment:
+            try:
+                with open(file, 'rb') as fp:
+                    msg = MIMEBase('application', "octet-stream")
+                    msg.set_payload(fp.read())
+                encoders.encode_base64(msg)
+                msg.add_header('Content-Disposition', 'attachment', filename=os.path.basename(file))
+                self.outer.attach(msg)
+            except:
+                print("Unable to open one of the attachments. Error: ", sys.exc_info()[0])
+                raise             
 
         composed = self.outer.as_string()
 
@@ -109,7 +110,6 @@ class Email():
                 s.sendmail(self.sender, self.recipients, composed)
                 s.close()
             print("Email sent!")
-            os.remove(self.attachment)
         except:
             print("Unable to send the email. Error: ", sys.exc_info()[0])
             raise
