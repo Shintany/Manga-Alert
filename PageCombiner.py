@@ -17,6 +17,7 @@ class PageCombiner():
         self.url = _url
         self.response = requests.get(self.url, stream = True)
         self.data = ""
+        self.out_filename = ""
 
         # Check if we got a response from the url
         if(self.response.status_code == 200):
@@ -28,6 +29,12 @@ class PageCombiner():
         
             # Start the process
             self.run()
+
+            # Horizontally combine
+            self.combine()
+
+            # Delete all temporary files
+            self.deleteFile()
 
     def countPage(self):
 
@@ -99,26 +106,8 @@ class PageCombiner():
 
         else:
             print("The url send an error code : " + str(self.response.status_code))
-        
-        # Horizontally combine
-        self.combine()
 
     def combine(self):
-        
-        # list_im = ['1.jpg', '2.jpg', '3.jpg']
-        # imgs    = [ Image.open(i) for i in list_im ]
-        # # pick the image which is the smallest, and resize the others to match it (can be arbitrary image shape here)
-        # min_shape = sorted( [(np.sum(i.size), i.size ) for i in imgs])[0][1]
-        # imgs_comb = np.hstack( (np.asarray( i.resize(min_shape) ) for i in imgs ) )
-
-        # # save that beautiful picture
-        # imgs_comb = Image.fromarray( imgs_comb)
-        # imgs_comb.save( 'Trifecta.jpg' )    
-
-        # # for a vertical stacking it is simple: use vstack
-        # imgs_comb = np.vstack( (np.asarray( i.resize(min_shape) ) for i in imgs ) )
-        # imgs_comb = Image.fromarray( imgs_comb)
-        # imgs_comb.save( 'Trifecta_vertical.jpg' )
 
         img = Image.open('1.jpg', 'r')
         img_w, img_h = img.size
@@ -126,11 +115,15 @@ class PageCombiner():
         background.paste(img, (0,0))
 
         for i in range(2, self.pageCount):
-
             img = Image.open(str(i) + '.jpg')
             offset = (0, (i-1)* img_h)
             background.paste(img, offset)
 
+        self.out_filename = self.name + '-' + str(self.chapter) + '.jpg'
 
+        background.save( self.out_filename )
 
-        background.save('out.jpg')
+    def deleteFile(self):
+        print("Deleting files...")
+        for file in range(1,self.pageCount):
+            os.remove(str(file) + '.jpg')
