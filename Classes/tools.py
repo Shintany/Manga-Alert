@@ -55,7 +55,7 @@ class Email():
         # enter your gmail bot address and pwd here
         self.sender = "manga.alert.bot@gmail.com"
         self.gmail_password = "YourPassword"
-        self.recipients = ["irchadtuankitchil@gmail.com", "theoyoung@hotmail.fr"]
+        self.recipients = ["irchadtuankitchil@gmail.com"]
 
         # Create the enclosing (outer) message
         self.outer = MIMEMultipart()
