@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 import re
 import string
 import requests
-from Classes.test import Test
+from Classes.Test import Test
 from Classes.tools import Database
 from Classes.tools import Email
 from Classes.PageCombiner import PageCombiner
