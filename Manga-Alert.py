@@ -2,10 +2,10 @@ from bs4 import BeautifulSoup
 import re
 import string
 import requests
-from test import Test
-from tools import Database
-from tools import Email
-from PageCombiner import PageCombiner
+from Classes.test import Test
+from Classes.tools import Database
+from Classes.tools import Email
+from Classes.PageCombiner import PageCombiner
 import sys
 import os
 
@@ -14,11 +14,11 @@ test = Test(filename)
 test.run()
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print ("Argument missing...")
-        print("Usage : python3 Manga-Alert.py $databasePath")
-        exit()
-    databasePath = sys.argv[1]
+    # if len(sys.argv) != 2:
+        # print ("Argument missing...")
+        # print("Usage : python3 Manga-Alert.py $databasePath")
+        # exit()
+    databasePath = "list.csv"
 
     # Filling the dictionnary with the manga in the .csv file
     db = Database(databasePath)
