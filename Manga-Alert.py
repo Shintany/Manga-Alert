@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import tkinter as tk
 import re
 import string
 import requests
@@ -6,6 +7,8 @@ from Classes.Test import Test
 from Classes.tools import Database
 from Classes.tools import Email
 from Classes.PageCombiner import PageCombiner
+from Classes.AddMenu import Menu
+
 import sys
 import os
 
@@ -14,15 +17,22 @@ test = Test(filename)
 test.run()
 
 if __name__ == "__main__":
-    # if len(sys.argv) != 2:
-        # print ("Argument missing...")
-        # print("Usage : python3 Manga-Alert.py $databasePath")
-        # exit()
+
+    # The url we're going to work with
+    website_url = "http://www.japscan.cc/mangas/"
+
+    if len(sys.argv) == 2 :
+        if sys.argv[1] == 'add' or sys.argv[1] == 'Add':
+            Menu(website_url)
+            exit()
+        else:
+            print('Failed entering adding mode')
+            print('Maybe you wanted to write \'add\' or \'Add\'')
+            exit()
     databasePath = "list.csv"
 
     # Filling the dictionnary with the manga in the .csv file
     db = Database(databasePath)
-    website_url = "http://www.japscan.cc/mangas/"
     list_path = "list.csv"
 
     new_manga = False
@@ -129,8 +139,8 @@ if __name__ == "__main__":
     # Sending mail to the user
     if new_manga == True:
         # mail.displayMailContent()
-        mail.sendMail()
-        db.updateDatabase()
+        # mail.sendMail()
+        # db.updateDatabase()
         print("New release!")
         mail.deleteAttachments()
     else:
