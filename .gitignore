@@ -1,0 +1,11 @@
+# Ignore Visual studio Code folders
+.vscode
+
+# Ignore pycache folders
+__pycache__/
+Classes/__pycache__/
+
+# images
+*.jpg
+*.png
+*.svg
