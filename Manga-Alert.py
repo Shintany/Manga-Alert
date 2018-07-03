@@ -137,9 +137,9 @@ if __name__ == "__main__":
     
     # Sending mail to the user
     if new_manga == True:
-        # mail.displayMailContent()
-        # mail.sendMail()
-        # db.updateDatabase()
+        mail.displayMailContent()
+        mail.sendMail()
+        db.updateDatabase()
         print("New release!")
         mail.deleteAttachments()
     else:

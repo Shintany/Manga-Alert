@@ -9,3 +9,5 @@ Classes/__pycache__/
 *.jpg
 *.png
 *.svg
+
+*.csv

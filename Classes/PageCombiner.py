@@ -67,6 +67,14 @@ class PageCombiner():
                         word = upper_letter + word[1:]
                     else:
                         word = upper_letter
+                    
+                    # In case if the word contains a '-' character
+                    # We need to put the next letter as a capital letter
+                    if '-' in  word:
+                        index = word.index('-')
+                        upper_letter = word[index + 1].upper()
+                        word = word[0:(index + 1)] + upper_letter + word[(index + 2):]
+                        
                 formatted_name = formatted_name + "-" + word
             
             # Deleting the first "-"
