@@ -1,5 +1,4 @@
 from bs4 import BeautifulSoup
-import tkinter as tk
 import re
 import string
 import requests
