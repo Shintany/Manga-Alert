@@ -1,23 +1,18 @@
+# This installer will download every needed package to run properly Manga-Alert Notifier
 
-# Update basic package
-sudo apt-get -y update
+# Update package
+sudo apt-get update -y
 
-# Install pip3 package installer
-sudo apt-get -y install python3-pip
+# BeautifulSoup4
+sudo pip3 isntall bs4
 
-# Install Requests
+# Requests
 sudo pip3 install requests
 
-# Install lxml parser
-sudo pip3 install lxml
+# lxml parser
+sudo apt-get install python3-lxml -y
 
-# Install BeautifulSoup4
-sudo pip3 install bs4
-
-# Uninstall then reinstall Pillow
-
-# Install PIL missing package
-sudo apt-get -y install libopenjp2-7
-
-# Install TIFF library
-sudo apt-get -y install libtiff5
+# PIL
+sudo pip3 install Pillow
+sudo apt-get install libopenjp2-7 -y
+sudo apt-get install libtiff5 -y
