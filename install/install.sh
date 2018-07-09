@@ -4,7 +4,7 @@
 sudo apt-get update -y
 
 # BeautifulSoup4
-sudo pip3 isntall bs4
+sudo pip3 install bs4
 
 # Requests
 sudo pip3 install requests

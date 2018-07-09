@@ -98,13 +98,11 @@ if __name__ == "__main__":
                             for chapter in all_chapters:
                                 if chapter_nb > db_manga_last_chapter:
                                     
-                                    ######################################
-                                    # MAYBE HAVE TO PASS BY A TXT FILE...
                                     # Saving manga's title
                                     chapter_title_str = ""
                                     chapter_title_str += chapter.get_text()
                                     content_for_mail = ""
-                                    if not ("Spoiler" in chapter_title_str):
+                                    if not ("Spoiler" in chapter_title_str or "RAW" in chapter_title_str):
 
                                         new_manga = True
                                         if (str(chapter_nb) in chapter_title_str):
