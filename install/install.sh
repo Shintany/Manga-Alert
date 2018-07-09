@@ -3,6 +3,9 @@
 # Update package
 sudo apt-get update -y
 
+# Install pip3 package installer
+sudo apt-get install python3-pip
+
 # BeautifulSoup4
 sudo pip3 install bs4
 
